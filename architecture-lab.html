@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#030407">
+  <title>KINET Architecture Lab</title>
+  <link rel="stylesheet" href="architecture-lab.css">
+</head>
+<body>
+  <header class="lab-header">
+    <a class="wordmark" href="index.html" aria-label="Volver a KINET Postura">
+      <span class="brand-mark" aria-hidden="true">K</span>
+      <span><small>SISTEMAS IRIS / INGENIERIA APLICADA</small><strong>KINET <i>ARCHITECTURE LAB</i></strong></span>
+    </a>
+    <nav class="header-links" aria-label="Navegacion de modulos">
+      <a href="index.html">POSTURA EN VIVO</a>
+      <span aria-current="page">ARCHITECTURE LAB</span>
+    </nav>
+  </header>
+
+  <main class="lab-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">DETECTAR <b>/</b> ENTENDER <b>/</b> ADAPTAR</p>
+        <h1 id="page-title">Architecture Lab</h1>
+        <p class="intro-copy">Compara alternativas para la evolucion tecnica de KINET. Este simulador es independiente del analisis postural y no procesa camara ni MediaPipe.</p>
+      </div>
+      <div class="model-badge"><span class="live-dot"></span> ESTIMACIONES DEL MODELO <small>NO SON MEDICIONES</small></div>
+    </section>
+    <aside class="model-warning" role="note">Las tasas, costos y disponibilidades son supuestos configurables. Una mejor puntuación aquí no demuestra superioridad en producción.</aside>
+
+    <div class="lab-grid">
+      <nav class="section-nav" role="tablist" aria-label="Recorrido de simulacion" aria-orientation="vertical">
+        <button id="stepTab1" type="button" role="tab" aria-selected="true" aria-controls="profile" data-step="1"><small>01</small> Configurar proyecto</button>
+        <button id="stepTab2" type="button" role="tab" aria-selected="false" aria-controls="inputs" data-step="2"><small>02</small> Elegir escenario</button>
+        <button id="stepTab3" type="button" role="tab" aria-selected="false" aria-controls="comparison" data-step="3"><small>03</small> Comparar alternativas</button>
+        <button id="stepTab4" type="button" role="tab" aria-selected="false" aria-controls="model" data-step="4"><small>04</small> Interpretar decisión</button>
+      </nav>
+
+      <div class="content-column">
+        <section id="profile" class="lab-section" data-stage="1" role="tabpanel" aria-labelledby="stepTab1">
+          <div class="section-heading"><span>01</span><div><h2>Perfil del proyecto</h2><p>Contexto que define la forma de evaluar las alternativas.</p></div></div>
+          <div class="profile-grid">
+            <label>Nombre del proyecto<input data-project="projectName" maxlength="80" required></label>
+            <label>Usuarios previstos<input data-project="intendedUsers" maxlength="140"></label>
+            <label class="span-two">Alcance<textarea data-project="scope" rows="2" maxlength="260"></textarea></label>
+            <label>Tipo de aplicacion
+              <select data-project="applicationType"><option value="real-time-vision">Vision web en tiempo real</option><option value="web-api">API web</option><option value="batch">Procesamiento por lotes</option></select>
+            </label>
+            <label>Infraestructura de referencia
+              <select data-project="infrastructureMode"><option value="cloud">Nube</option><option value="on-prem">Centro de datos propio</option></select>
+            </label>
+          </div>
+          <div class="requirement-toggles">
+            <label><input type="checkbox" data-project="requireIndependentScaling"> Escalado independiente obligatorio</label>
+            <label><input type="checkbox" data-project="realTimeRequired"> Tiempo real obligatorio</label>
+            <label><input type="checkbox" data-project="eventBrokerAllowed"> Se permite broker de eventos</label>
+          </div>
+          <div class="step-actions"><button id="resetButton" type="button">Restaurar supuestos</button><button type="button" class="button-primary" data-go-step="2">Continuar: elegir escenario</button></div>
+        </section>
+
+        <section id="inputs" class="lab-section" data-stage="2" role="tabpanel" aria-labelledby="stepTab2" hidden>
+          <div class="section-heading"><span>02</span><div><h2>Escenario y restricciones</h2><p id="scenarioDescription"></p></div></div>
+          <label class="scenario-picker">ESCENARIO DE SIMULACION
+            <select id="scenarioSelect" aria-label="Seleccionar escenario"></select>
+          </label>
+          <p id="scenarioDelta" class="scenario-delta"></p>
+          <div id="validationErrors" class="validation-errors" role="alert" hidden></div>
+          <div class="input-grid">
+            <label>Usuarios concurrentes <small>Personas; modifica el factor de demanda pico.</small><input type="number" min="1" max="100000" step="1" data-scenario="concurrentUsers" required></label>
+            <label>Solicitudes al backend <small>Solicitudes/s, no FPS; junto con concurrencia determina la carga estimada.</small><input type="number" min="0.1" max="10000" step="0.1" data-scenario="requestsPerSecond" required></label>
+            <label>Latencia de red <small>ms/salto; se suma según los saltos supuestos por arquitectura.</small><input type="number" min="0" max="2000" step="1" data-scenario="networkLatencyMs" required></label>
+            <label>Presupuesto máximo <small>COP/mes; puede excluir alternativas si es obligatorio.</small><input type="number" min="0" max="1000000000" step="10000" data-scenario="monthlyBudgetCOP" required></label>
+            <label>Latencia máxima aceptable <small>ms; puede excluir opciones si es obligatoria.</small><input type="number" min="50" max="10000" step="10" data-scenario="maxLatencyMs" required></label>
+            <label>Privacidad mínima requerida <small>Puntos heurísticos 0-100; no es certificación.</small><input type="number" min="0" max="100" step="1" data-scenario="minPrivacyScore" required></label>
+            <label>Disponibilidad mínima requerida <small>%; producto teórico de componentes críticos.</small><input type="number" min="90" max="99.99" step="0.01" data-scenario="minAvailability" required></label>
+          </div>
+          <fieldset class="mandatory-fields"><legend>Restricciones obligatorias</legend>
+            <label><input type="checkbox" data-mandatory="budget"> Presupuesto</label>
+            <label><input type="checkbox" data-mandatory="latency"> Latencia</label>
+            <label><input type="checkbox" data-mandatory="privacy"> Privacidad</label>
+            <label><input type="checkbox" data-mandatory="availability"> Disponibilidad</label>
+          </fieldset>
+          <div class="weights-block">
+            <div class="subheading"><h3>Prioridades de comparacion</h3><span>ponderaciones relativas; suma no obligatoria</span></div>
+            <div class="weight-grid">
+              <label>Latencia <input type="number" min="0" max="100" data-weight="latency"></label>
+              <label>Capacidad <input type="number" min="0" max="100" data-weight="capacity"></label>
+              <label>Costo <input type="number" min="0" max="100" data-weight="cost"></label>
+              <label>Disponibilidad <input type="number" min="0" max="100" data-weight="availability"></label>
+              <label>Privacidad <input type="number" min="0" max="100" data-weight="privacy"></label>
+            </div>
+          </div>
+          <details class="input-impact">
+            <summary>Qué entradas afectan al cálculo</summary>
+            <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Uso en el motor</th></tr></thead><tbody>
+              <tr><td>Tipo de aplicación</td><td>Multiplica el tiempo de procesamiento base.</td></tr>
+              <tr><td>Infraestructura</td><td>Multiplica el costo mensual estimado.</td></tr>
+              <tr><td>Usuarios concurrentes + solicitudes/s</td><td>Determinan el factor y la demanda pico supuesta.</td></tr>
+              <tr><td>Latencia de red</td><td>Se multiplica por los saltos internos supuestos.</td></tr>
+              <tr><td>Presupuesto, latencia, disponibilidad, privacidad y switches obligatorios</td><td>Excluyen alternativas cuando la condición se marca obligatoria.</td></tr>
+              <tr><td>Pesos</td><td>Determinan la contribución relativa de cada criterio; se normalizan internamente para sumar 1.</td></tr>
+              <tr><td>Tasa, tope, eficiencia y costos por arquitectura</td><td>Determinan instancias, capacidad, utilización, costo, score y Pareto según el parámetro.</td></tr>
+              <tr><td>Nombre, alcance y texto de usuarios previstos</td><td>Solo se registran/exportan; no afectan los cálculos.</td></tr>
+            </tbody></table></div>
+            <p>La relación concurrencia → RPS usa un factor fijo `1 + usuarios/200`, supuesto del equipo, no un perfil de uso medido.</p>
+          </details>
+          <details class="parameter-editor">
+            <summary>Supuestos cuantitativos editables por arquitectura</summary>
+            <p>Valores de trabajo del equipo, no mediciones ni fuentes externas. Cambiarlos recalcula instancias, capacidad, costos y recomendación.</p>
+            <div id="architectureParameters" class="parameter-grid"></div>
+          </details>
+          <p class="assumption-note">Los valores iniciales son supuestos academicos ilustrativos, no mediciones de KINET ni requisitos oficiales. Al cambiar una entrada, ejecuta de nuevo para actualizar la comparacion.</p>
+          <div class="step-actions"><button type="button" data-go-step="1">Volver al proyecto</button><button id="runButton" class="button-primary" type="button">Ejecutar y comparar</button></div>
+        </section>
+
+        <section id="comparison" class="lab-section results-section" data-stage="3" role="tabpanel" aria-labelledby="stepTab3" hidden>
+          <div class="section-heading"><span>03</span><div><h2>Resultados calculados</h2><p id="resultStatus">Ejecuta un escenario para calcular los indicadores.</p></div></div>
+          <div class="results-actions"><button id="compareButton" type="button">Comparar los cuatro escenarios</button><button id="exportButton" type="button" disabled>Exportar JSON</button></div>
+          <div id="charts" class="charts-grid"></div>
+                    <div class="table-wrap"><table><thead><tr><th>Arquitectura</th><th>Aceptación / resultado disponible</th><th>Capacidad asignada / maxima</th><th>Uso asignado / maximo</th><th>Margen / saturacion</th><th>Costo mensual</th><th>Disponibilidad / índice heurístico de privacidad</th><th>Restricciones</th><th>Puntaje relativo</th><th>Traza de cálculo</th></tr></thead><tbody id="resultRows"><tr><td colspan="10">Sin resultados calculados.</td></tr></tbody></table></div>
+          <details class="indicator-legend">
+            <summary>Como leer estos indicadores</summary>
+            <ul>
+              <li><b>Latencia estimada:</b> tiempo calculado por las formulas y supuestos; no es una medicion observada.</li>
+              <li><b>Capacidad maxima modelada:</b> tasa por instancia x tope configurado; no equivale a capacidad medida en una prueba de carga.</li>
+              <li><b>Utilizacion:</b> proporcion de capacidad asignada o maxima consumida por la demanda pico estimada.</li>
+              <li><b>Margen:</b> capacidad maxima menos demanda pico; negativo indica que la carga supera ese tope teorico.</li>
+              <li><b>Costo:</b> estimacion mensual COP con tarifas ilustrativas, no cotizacion de proveedor.</li>
+              <li><b>Disponibilidad:</b> producto matematico bajo el supuesto de componentes criticos en serie e independientes.</li>
+              <li><b>Privacidad:</b> indice heuristico de atributos asumidos; no certifica seguridad ni cumplimiento normativo.</li>
+            </ul>
+          </details>
+          <details class="pareto-details">
+            <summary>Frontera de Pareto: costo frente a capacidad máxima</summary>
+            <p>Comparación no ponderada entre alternativas elegibles. Una opción está dominada si otra cuesta igual o menos y ofrece igual o más capacidad máxima modelada, con al menos una mejora estricta.</p>
+            <div id="paretoFrontier" class="pareto-view"></div>
+          </details>
+          <div id="scenarioComparison" class="scenario-results" hidden>
+            <div class="subheading"><h3>Comparacion de escenarios</h3><span>Misma configuracion de proyecto y ponderaciones</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Escenario</th><th>Carga pico</th><th>Recomendacion</th><th>Puntaje</th><th>Elegibles</th></tr></thead><tbody id="scenarioRows"></tbody></table></div>
+          </div>
+          <details id="architecture-notes" class="architecture-details">
+            <summary>Componentes, ventajas, límites y supuestos de las arquitecturas</summary>
+            <div id="architectureDetails" class="architecture-grid"></div>
+          </details>
+          <div class="step-actions"><button type="button" data-go-step="2">Volver a ajustar</button><button type="button" class="button-primary" data-go-step="4">Continuar: interpretar recomendación</button></div>
+        </section>
+
+        <section id="model" class="lab-section" data-stage="4" role="tabpanel" aria-labelledby="stepTab4" hidden>
+          <div class="section-heading"><span>04</span><div><h2>Interpretar la decisión</h2><p>La recomendación compara puntuaciones calculadas únicamente entre alternativas elegibles.</p></div></div>
+          <div id="recommendation" class="recommendation" aria-live="polite"><p>Ejecuta un escenario para calcular la recomendación.</p></div>
+          <p class="assumption-note">La puntuación resume este modelo académico. No demuestra qué arquitectura rendirá mejor en un sistema desplegado.</p>
+          <div class="step-actions"><button type="button" data-go-step="3">Volver a la comparación</button></div>
+          <div class="sensitivity-tools">
+            <h3>Sensibilidad de la recomendación</h3>
+            <p>Varía un criterio entre 0% y 100%, distribuyendo el peso restante entre los demás. Es un análisis de preferencias para este escenario, no robustez universal.</p>
+            <button id="runSensitivityButton" type="button">Calcular sensibilidad</button>
+            <div id="sensitivityResults" class="table-wrap" hidden></div>
+          </div>
+          <details class="methodology-details">
+            <summary>Metodología, procedencia de parámetros, pruebas y límites</summary>
+          <div class="model-copy">
+            <h3>Formulas usadas</h3>
+            <ul>
+              <li><b>Carga pico</b> = solicitudes/s x (1 + usuarios concurrentes / 200). Es un factor de pico supuesto; no agrega FPS de camara.</li>
+              <li><b>Capacidad asignada</b> = instancias estimadas x tasa por instancia x eficiencia. Instancias = min(maximo, max(1, ceil(carga pico / (tasa x eficiencia)))). <b>Capacidad maxima modelada</b> = maximo de instancias x tasa x eficiencia. Eficiencia inicial 1.0 conserva los resultados anteriores. Utilizacion asignada/maxima = carga pico / capacidad respectiva x 100%. Margen = capacidad maxima - carga pico; negativo indica deficit. Se marca saturado al alcanzar o exceder el maximo.</li>
+              <li><b>Resultado disponible (latencia de finalización)</b> = <code>processingMs * APPLICATION_FACTORS[applicationType] + networkLatencyMs * (1 + internalHops) + serializationMs + queueBaseMs + queueingMs</code>. Solo finalización entra al score. <b>Aceptación de evento</b> = <code>networkLatencyMs * (1 + acceptanceInternalHops) + serializationMs</code>; no suma procesamiento, cola ni persistencia durable y no se puntúa. No son P95 ni mediciones.</li>
+              <li><b>Costo COP/mes</b> = (paquete fijo supuesto por arquitectura + instancias x costo mensual unitario supuesto) x factor de infraestructura. Moneda COP, region de referencia Colombia y fecha del modelo indicadas en el catalogo; sin cotizacion real ni desglose verificable por proveedor/componente.</li>
+              <li><b>Disponibilidad</b> = producto de disponibilidades de componentes criticos nombrados. Se asumen fallos independientes y serie; no se modela redundancia ni fallos correlacionados. Es una estimacion bajo ese supuesto, no disponibilidad observada.</li>
+              <li><b>Privacidad (0-100)</b> = minimización (20 si no se transmite video crudo) + ubicación (10/20) + retención (0/15/20) + cifrado en tránsito (20 si asumido) + control de acceso (20 si asumido). Es un índice heurístico; no evalúa seguridad ni cumplimiento.</li>
+              <li><b>Puntaje relativo</b> = suma de criterio min-max x peso normalizado. Pesos 30/20/20/20/10 divididos por su suma; si <code>high === low</code>, <code>normalized()</code> devuelve 50. Una elegible recibe 50 en criterios constantes; no es porcentaje de calidad. Pareto costo-capacidad compara dominancia sin pesos y excluye no elegibles. Sensibilidad varía un peso a 0 y 100 redistribuyendo proporcionalmente los demás.</li>
+            </ul>
+            <h3>Procedencia de los parametros</h3>
+            <p>A (mediciones de KINET): ninguna. B (respaldo parcial): según análisis del equipo, pendiente de verificación contra el artículo, AD p. 150 define respuesta petición→respuesta y AD pp. 151–152 informa tendencias bajo sus cargas; BL pp. 20364–20370 describe mecanismos de sobrecarga/escalado en su entorno y BL p. 20363 una estructura de costos Azure 2020. C: supuestos del equipo. D: magnitudes pendientes de validación. E: sin respaldo documental. AD/BL/SS no estudian eventos, disponibilidad ni privacidad; SS compara frameworks PHP, no arquitecturas. Ninguna cifra de los artículos se usa como parámetro KINET.</p>
+            <p>La recomendacion expresa la mejor puntuacion entre opciones elegibles en este modelo, no una arquitectura mas rapida o fiable demostrada experimentalmente.</p>
+            <div id="parameterCatalog" class="parameter-catalog"></div>
+            <p id="costAssumptions"></p>
+            <h3>Casos de prueba documentados</h3>
+            <p>La lista describe casos definidos; no informa un estado de ejecucion en el navegador. Ejecuta <code>node --test architecture-model.test.mjs</code> en la carpeta del proyecto para obtener el resultado real de Node.js.</p>
+            <div class="test-list" id="testList"></div>
+            <h3>Información adicional necesaria para validar conclusiones en una aplicación real</h3>
+            <ul>
+              <li>Tasa de servicio medida por instancia con carga representativa de análisis de video y configuración documentada.</li>
+              <li>Latencia extremo a extremo observada y percentiles, incluyendo colas.</li>
+              <li>Eficiencia real al escalar, tope de instancias y tiempo de arranque/provisión.</li>
+              <li>Costos reales por proveedor, región, fecha, componentes y volumen de uso.</li>
+              <li>Disponibilidad observada y evidencia sobre fallos independientes o correlacionados.</li>
+              <li>Perfil real de usuarios concurrentes y relación medida con solicitudes por segundo.</li>
+              <li>Controles de privacidad realmente implementados y verificados.</li>
+              <li>En eventos, mediciones separadas de aceptación del evento y disponibilidad del resultado.</li>
+            </ul>
+            <h3>Validez y validacion real</h3>
+            <p><b>Constructo:</b> tasa por instancia simplifica el servicio de análisis; la disponibilidad no modela redundancia/dependencia y privacidad es heurística. <b>Interna:</b> autoescalado instantáneo, cargas deterministas, colas por tramos y componentes independientes simplifican la causalidad; el acuse de eventos omite CPU/persistencia del broker. <b>Externa:</b> los experimentos AD/BL usan otras aplicaciones/plataformas y no cubren KINET ni eventos. No son mediciones de KINET ni una validación experimental.</p>
+            <p>Para validar se necesitan: tasa medida por instancia con video/carga representativos; latencia extremo a extremo y percentiles incluyendo cola; eficiencia, tope y arranque de instancias observados; cotizaciones/costos de proveedor, región y fecha; disponibilidad observada y dependencias de fallo; perfil real de concurrencia y relación con req/s; controles de privacidad efectivamente implementados; y en eventos mediciones separadas de aceptación y disponibilidad del resultado. También aplicaciones funcionalmente equivalentes, hardware comparable, CPU, memoria, throughput y errores.</p>
+            <p>Los tres diseños son alternativas hipotéticas, no servicios implementados. El prototipo postural permanece en <a href="index.html">KINET Postura</a>; este laboratorio no inicia la cámara ni importa MediaPipe.</p>
+            <p>El prototipo postural permanece en <a href="index.html">KINET Postura</a>; este laboratorio no inicia la camara ni importa MediaPipe.</p>
+          </div>
+          </details>
+        </section>
+      </div>
+    </div>
+    <footer class="lab-footer"><span>IRIS SYSTEMS / KINET</span><span>SIMULACION ACADEMICA · NO ES BENCHMARK PRODUCTIVO</span></footer>
+  </main>
+  <script type="module" src="architecture-lab.js?v=12"></script>
+</body>
+</html>
