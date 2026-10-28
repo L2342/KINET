@@ -10,7 +10,7 @@ import {
   computeParetoFrontier,
   evaluateScenarios,
   simulateScenario,
-} from "./architecture-model.js?v=12";
+} from "./architecture-model.js?v=14";
 
 const STORAGE_KEY = "kinet-architecture-lab-v1";
 const copy = (value) => JSON.parse(JSON.stringify(value));

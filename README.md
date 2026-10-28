@@ -48,7 +48,7 @@ node --test architecture-model.test.mjs
 4. Espera el build de Pages y copia el URL que GitHub muestre.
 5. Comprueba el laboratorio en `<URL-del-sitio>/architecture-lab.html`, incluyendo motor, navegación, traza y exportación.
 
-Enlace público: **PENDIENTE DE PUBLICACIÓN Y VERIFICACIÓN**. Para este remoto, el URL esperado si Pages se habilita en root es `https://l2342.github.io/KINET/architecture-lab.html`; no está confirmado que ya esté activo. El laboratorio estático no necesita `server.py`; el prototipo postural conserva MediaPipe desde CDN y su endpoint DroidCam local requiere `server.py`.
+Enlace público verificado en navegador: [KINET Architecture Lab](https://l2342.github.io/KINET/architecture-lab.html). El laboratorio estático no necesita `server.py`; el prototipo postural conserva MediaPipe desde CDN y su endpoint DroidCam local requiere `server.py`.
 
 ## Uso recomendado
 

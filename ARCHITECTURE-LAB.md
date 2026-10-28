@@ -18,7 +18,7 @@ node --test architecture-model.test.mjs
 
 ## Despliegue estático
 
-El laboratorio funciona sin `server.py`: `architecture-lab.js` importa `architecture-model.js` usando rutas relativas y extensiones JavaScript estándar. Compruébalo desde la carpeta padre con `python -m http.server 8022` y abre `/KINET-prototype/architecture-lab.html`. Para GitHub Pages: publica el contenido del proyecto en la rama/carpeta configurada en Settings → Pages; confirma que `architecture-lab.html`, `architecture-lab.js`, `architecture-model.js` y `architecture-lab.css` quedan en la misma carpeta. El enlace público está **PENDIENTE DE PUBLICACIÓN Y VERIFICACIÓN**. Para `L2342/KINET`, el URL esperado si Pages se habilita desde `main`/root es `https://l2342.github.io/KINET/architecture-lab.html`; no afirmo que esté activo.
+El laboratorio funciona sin `server.py`: `architecture-lab.js` importa `architecture-model.js` usando rutas relativas y extensiones JavaScript estándar. Se probó bajo la subruta `/KINET-prototype/` con un servidor estático genérico. GitHub Pages está configurado para `main`/root y la página pública se abrió en navegador: [KINET Architecture Lab](https://l2342.github.io/KINET/architecture-lab.html).
 
 El perfil, los escenarios modificados, ponderaciones y tasas/topes/costos/eficiencia por arquitectura se guardan en `localStorage`. **Restaurar supuestos** devuelve todos los campos a sus valores académicos iniciales. **Exportar JSON** descarga entradas, parámetros, catálogo de procedencia, las dos latencias, indicadores, componentes de disponibilidad, restricciones y contribuciones de la última ejecución válida. Una entrada editada invalida y oculta los resultados anteriores hasta ejecutar otra vez.
 
@@ -179,7 +179,7 @@ Comprobaciones de integración/UI separadas: ejecuté desde `python -m http.serv
 | 8. Recomendacion con restricciones | Elegibilidad antes de puntuacion, score y traza. | Implementado y probado | P04, P05, P18-P19, P24, P32-P35. |
 | 9. Interfaz adaptable | Cuatro etapas, traza plegable, comparación y metodología. | Implementado; navegador verificado | 375/360 px y escritorio, incluida tabla/traza; sin estudio humano de usabilidad. |
 | 10. Validacion y pruebas | Controles de entradas, parámetros y pesos. | Implementado y probado | P01-P36 en Node; comprobaciones estáticas en navegador se describen aparte. |
-| 11. Documentacion y enlace | Fórmulas, parámetros, pruebas y despliegue. | Documentado; enlace público pendiente | URL prevista `https://l2342.github.io/KINET/architecture-lab.html`, no publicada/activada/verificada. |
+| 11. Documentacion y enlace | Fórmulas, parámetros, pruebas y despliegue. | Documentado y publicado | [KINET Architecture Lab](https://l2342.github.io/KINET/architecture-lab.html), abierto en navegador. |
 | 12. Sustentacion reproducible | Configurar, seleccionar, ejecutar, modificar, comparar y explicar. | Flujo local verificado | Validar requisitos/datos con equipo y ejecutar pruebas de carga reales sigue pendiente. |
 
 ## Guion breve de demostracion
@@ -194,7 +194,7 @@ Comprobaciones de integración/UI separadas: ejecuté desde `python -m http.serv
 
 ## Publicación
 
-No se realizó un push ni se habilitó GitHub Pages: el remoto no devolvió ramas, no hay commits locales y GitHub CLI no está instalado. Para publicar: (1) conservar los archivos de esta carpeta en el repositorio `L2342/KINET`; (2) crear y subir un commit en `main`; (3) en GitHub abrir Settings → Pages y elegir Deploy from a branch, `main`, `/ (root)`; (4) esperar la URL que GitHub muestre y sustituir el marcador público en README/esta guía; (5) verificar `/KINET/architecture-lab.html`, carga del módulo, navegación y exportación. Ningún enlace público está confirmado todavía.
+GitHub Pages está configurado para la rama `main` y raíz del repositorio. La ruta pública comprobada es `https://l2342.github.io/KINET/architecture-lab.html`. La ejecución local alternativa es `python -m http.server 8000`; la ruta estática no necesita `server.py`.
 
 ## Referencias academicas y alcance
 
